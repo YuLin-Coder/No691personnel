@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.dao.CareerMapper">
+    <resultMap id="BaseResultMap" type="com.zzc.model.Career">
+        <id column="careerid" property="careerid" jdbcType="INTEGER"/>
+        <result column="startdate" property="startdate" jdbcType="DATE"/>
+        <result column="enddate" property="enddate" jdbcType="DATE"/>
+        <result column="position" property="position" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="fkuserid" property="fkuserid" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    careerid, startdate, enddate, position, company, fkuserid
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zzc.model.CareerExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from careers
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from careers
+        where careerid = #{careerid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from careers
+    where careerid = #{careerid,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.zzc.model.CareerExample">
+        delete from careers
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.zzc.model.Career">
+        <selectKey resultType="java.lang.Integer" keyProperty="careerid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into careers (startdate, enddate, position,
+        company, fkuserid)
+        values (#{startdate,jdbcType=DATE}, #{enddate,jdbcType=DATE}, #{position,jdbcType=VARCHAR},
+        #{company,jdbcType=VARCHAR}, #{fkuserid,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.zzc.model.Career">
+        <selectKey resultType="java.lang.Integer" keyProperty="careerid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into careers
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="startdate != null">
+                startdate,
+            </if>
+            <if test="enddate != null">
+                enddate,
+            </if>
+            <if test="position != null">
+                position,
+            </if>
+            <if test="company != null">
+                company,
+            </if>
+            <if test="fkuserid != null">
+                fkuserid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="startdate != null">
+                #{startdate,jdbcType=DATE},
+            </if>
+            <if test="enddate != null">
+                #{enddate,jdbcType=DATE},
+            </if>
+            <if test="position != null">
+                #{position,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="fkuserid != null">
+                #{fkuserid,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.zzc.model.CareerExample" resultType="java.lang.Integer">
+        select count(*) from careers
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update careers
+        <set>
+            <if test="record.careerid != null">
+                careerid = #{record.careerid,jdbcType=INTEGER},
+            </if>
+            <if test="record.startdate != null">
+                startdate = #{record.startdate,jdbcType=DATE},
+            </if>
+            <if test="record.enddate != null">
+                enddate = #{record.enddate,jdbcType=DATE},
+            </if>
+            <if test="record.position != null">
+                position = #{record.position,jdbcType=VARCHAR},
+            </if>
+            <if test="record.company != null">
+                company = #{record.company,jdbcType=VARCHAR},
+            </if>
+            <if test="record.fkuserid != null">
+                fkuserid = #{record.fkuserid,jdbcType=INTEGER},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update careers
+        set careerid = #{record.careerid,jdbcType=INTEGER},
+        startdate = #{record.startdate,jdbcType=DATE},
+        enddate = #{record.enddate,jdbcType=DATE},
+        position = #{record.position,jdbcType=VARCHAR},
+        company = #{record.company,jdbcType=VARCHAR},
+        fkuserid = #{record.fkuserid,jdbcType=INTEGER}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zzc.model.Career">
+        update careers
+        <set>
+            <if test="startdate != null">
+                startdate = #{startdate,jdbcType=DATE},
+            </if>
+            <if test="enddate != null">
+                enddate = #{enddate,jdbcType=DATE},
+            </if>
+            <if test="position != null">
+                position = #{position,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                company = #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="fkuserid != null">
+                fkuserid = #{fkuserid,jdbcType=INTEGER},
+            </if>
+        </set>
+        where careerid = #{careerid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zzc.model.Career">
+    update careers
+    set startdate = #{startdate,jdbcType=DATE},
+      enddate = #{enddate,jdbcType=DATE},
+      position = #{position,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      fkuserid = #{fkuserid,jdbcType=INTEGER}
+    where careerid = #{careerid,jdbcType=INTEGER}
+  </update>
+
+
+
+    <resultMap id="CareerDetail" type="Career">
+        <id column="careerid" property="careerid" jdbcType="INTEGER"/>
+        <result column="startdate" property="startdate" jdbcType="DATE"/>
+        <result column="enddate" property="enddate" jdbcType="DATE"/>
+        <result column="position" property="position" jdbcType="VARCHAR"/>
+        <result column="company" property="company" jdbcType="VARCHAR"/>
+        <result column="fkuserid" property="fkuserid" jdbcType="INTEGER"/>
+
+        <association property="user" javaType="User">
+            <id column="userid" property="userid" jdbcType="INTEGER"/>
+            <result column="username" property="username" jdbcType="VARCHAR"/>
+            <result column="password" property="password" jdbcType="VARCHAR"/>
+            <result column="realname" property="realname" jdbcType="VARCHAR"/>
+            <result column="sex" property="sex" jdbcType="VARCHAR"/>
+            <result column="birthday" property="birthday" jdbcType="DATE"/>
+            <result column="email" property="email" jdbcType="VARCHAR"/>
+            <result column="phone" property="phone" jdbcType="VARCHAR"/>
+            <result column="fkroleid" property="fkroleid" jdbcType="INTEGER"/>
+            <result column="fkstateid" property="fkstateid" jdbcType="INTEGER"/>
+            <result column="fkdeptid" property="fkdeptid" jdbcType="INTEGER"/>
+            <result column="fkpostid" property="fkpostid" jdbcType="INTEGER"/>
+        </association>
+
+    </resultMap>
+
+    <select id="list" parameterType="Career" resultMap="CareerDetail">
+
+        select * from careers left join users
+        on fkuserid = userid
+        where 1=1
+
+        <if test="startdate!= null and startdate!= '' ">
+            and startdate like '%${startdate}%'
+        </if>
+
+        <if test="enddate!= null and enddate!= '' ">
+            and enddate like '%${enddate}%'
+        </if>
+
+        <if test="fkuserid != null and fkuserid !='' ">
+            and fkuserid = #{fkuserid}
+        </if>
+
+        order by careerid
+
+    </select>
+    
+</mapper>

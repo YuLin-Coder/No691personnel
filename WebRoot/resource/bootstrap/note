@@ -1,0 +1,12 @@
+1.缩略图选择图片无法添加
+2.导航栏button作用不明
+	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+	  <span class="sr-only">Toggle navigation</span>
+	  <span class="icon-bar"></span>
+	  <span class="icon-bar"></span>
+	  <span class="icon-bar"></span>
+	</button>
+3.猜测
+	sr-only加载失败时显示的内容
+	
+	

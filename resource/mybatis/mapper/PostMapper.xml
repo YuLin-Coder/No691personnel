@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.dao.PostMapper">
+    <resultMap id="BaseResultMap" type="com.zzc.model.Post">
+        <id column="postid" property="postid" jdbcType="INTEGER"/>
+        <result column="postname" property="postname" jdbcType="VARCHAR"/>
+        <result column="postdesc" property="postdesc" jdbcType="VARCHAR"/>
+        <result column="fkdeptid" property="fkdeptid" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    postid, postname, postdesc, fkdeptid
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zzc.model.PostExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from posts
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from posts
+        where postid = #{postid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from posts
+    where postid = #{postid,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.zzc.model.PostExample">
+        delete from posts
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.zzc.model.Post">
+        <selectKey resultType="java.lang.Integer" keyProperty="postid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into posts (postname, postdesc, fkdeptid
+        )
+        values (#{postname,jdbcType=VARCHAR}, #{postdesc,jdbcType=VARCHAR}, #{fkdeptid,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.zzc.model.Post">
+        <selectKey resultType="java.lang.Integer" keyProperty="postid" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into posts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postname != null">
+                postname,
+            </if>
+            <if test="postdesc != null">
+                postdesc,
+            </if>
+            <if test="fkdeptid != null">
+                fkdeptid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postname != null">
+                #{postname,jdbcType=VARCHAR},
+            </if>
+            <if test="postdesc != null">
+                #{postdesc,jdbcType=VARCHAR},
+            </if>
+            <if test="fkdeptid != null">
+                #{fkdeptid,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.zzc.model.PostExample" resultType="java.lang.Integer">
+        select count(*) from posts
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update posts
+        <set>
+            <if test="record.postid != null">
+                postid = #{record.postid,jdbcType=INTEGER},
+            </if>
+            <if test="record.postname != null">
+                postname = #{record.postname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.postdesc != null">
+                postdesc = #{record.postdesc,jdbcType=VARCHAR},
+            </if>
+            <if test="record.fkdeptid != null">
+                fkdeptid = #{record.fkdeptid,jdbcType=INTEGER},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update posts
+        set postid = #{record.postid,jdbcType=INTEGER},
+        postname = #{record.postname,jdbcType=VARCHAR},
+        postdesc = #{record.postdesc,jdbcType=VARCHAR},
+        fkdeptid = #{record.fkdeptid,jdbcType=INTEGER}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zzc.model.Post">
+        update posts
+        <set>
+            <if test="postname != null">
+                postname = #{postname,jdbcType=VARCHAR},
+            </if>
+            <if test="postdesc != null">
+                postdesc = #{postdesc,jdbcType=VARCHAR},
+            </if>
+            <if test="fkdeptid != null">
+                fkdeptid = #{fkdeptid,jdbcType=INTEGER},
+            </if>
+        </set>
+        where postid = #{postid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zzc.model.Post">
+    update posts
+    set postname = #{postname,jdbcType=VARCHAR},
+      postdesc = #{postdesc,jdbcType=VARCHAR},
+      fkdeptid = #{fkdeptid,jdbcType=INTEGER}
+    where postid = #{postid,jdbcType=INTEGER}
+  </update>
+
+
+
+    <resultMap id="PostDetail" type="Post">
+        <id column="postid" property="postid" jdbcType="INTEGER"/>
+        <result column="postname" property="postname" jdbcType="VARCHAR"/>
+        <result column="postdesc" property="postdesc" jdbcType="VARCHAR"/>
+        <result column="fkdeptid" property="fkdeptid" jdbcType="INTEGER"/>
+
+        <association property="dept" javaType="Dept">
+            <id column="deptid" property="deptid" jdbcType="INTEGER"/>
+            <result column="deptname" property="deptname" jdbcType="VARCHAR"/>
+            <result column="deptdesc" property="deptdesc" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <select id="list" parameterType="Post" resultMap="PostDetail">
+
+        select * from posts
+        left join depts on fkdeptid = deptid
+        where 1=1
+
+        <if test="postname!= null and postname!= '' ">
+            and postname like '%${postname}%'
+        </if>
+
+        <if test="postid != null and postid !='' ">
+            and postid = #{postid}
+        </if>
+
+        <if test="fkdeptid != null and fkdeptid !='' ">
+            and fkdeptid = #{fkdeptid}
+        </if>
+
+        order by postid
+
+    </select>
+    
+</mapper>
